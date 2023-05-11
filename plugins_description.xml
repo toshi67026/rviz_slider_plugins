@@ -1,0 +1,7 @@
+<library path="rviz_slider_plugins">
+  <class name="rviz_slider_plugin/Int32SliderPanel" type="rviz_slider_plugins::Int32SliderPanel" base_class_type="rviz_common::Panel">
+    <description>
+      int32 slider plugin
+    </description>
+  </class>
+</library>
