@@ -30,6 +30,8 @@ set(CMAKE_AUTOMOC ON)
 add_library(${PROJECT_NAME} SHARED
   src/int32_slider_panel.cpp
   include/${PROJECT_NAME}/int32_slider_panel.hpp
+  src/float32_slider_panel.cpp
+  include/${PROJECT_NAME}/float32_slider_panel.hpp
 )
 
 ament_target_dependencies(${PROJECT_NAME}

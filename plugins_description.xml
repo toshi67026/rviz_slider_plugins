@@ -4,4 +4,9 @@
       int32 slider plugin
     </description>
   </class>
+  <class name="rviz_slider_plugin/Float32SliderPanel" type="rviz_slider_plugins::Float32SliderPanel" base_class_type="rviz_common::Panel">
+    <description>
+      float32 slider plugin
+    </description>
+  </class>
 </library>
