@@ -22,6 +22,10 @@ public:
             SLOT(notifyValueChanged(int)));
   }
 
+  void setFloatValue(float float_value) {
+    this->setValue(static_cast<int>(float_value * 10.0));
+  }
+
 signals:
   void floatValueChanged(float value);
 
@@ -42,7 +46,7 @@ public:
   virtual void save(rviz_common::Config config) const;
 
 public Q_SLOTS:
-  void valueChangeEvent(float value);
+  void updateCurrValue(float value);
   void tick();
 
 protected:
@@ -57,7 +61,8 @@ protected:
   FloatSlider *slider_;
 
 private:
-  float curr_slider_value_ = 0.0; // default value
+  float curr_slider_value_ = 0.0;
+  void updateRange();
 };
 
 } // namespace rviz_slider_plugins

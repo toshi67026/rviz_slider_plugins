@@ -16,8 +16,7 @@ Int32SliderPanel::Int32SliderPanel(QWidget *parent)
     : rviz_common::Panel(parent) {
 
   slider_ = new QSlider(Qt::Horizontal, this);
-  connect(slider_, SIGNAL(valueChanged(int)), this,
-          SLOT(valueChangeEvent(int)));
+  connect(slider_, SIGNAL(valueChanged(int)), this, SLOT(updateCurrValue(int)));
 
   QTimer *output_timer = new QTimer(this);
   connect(output_timer, SIGNAL(timeout()), this, SLOT(tick()));
@@ -50,6 +49,9 @@ Int32SliderPanel::Int32SliderPanel(QWidget *parent)
   layout->addLayout(hlayout2);
   layout->addLayout(hlayout3);
   setLayout(layout);
+
+  updateRange();         // before set default value
+  slider_->setValue(-2); // default value
 }
 
 void Int32SliderPanel::onInitialize() {
@@ -61,14 +63,11 @@ void Int32SliderPanel::save(rviz_common::Config config) const {
   rviz_common::Panel::save(config);
 }
 
-void Int32SliderPanel::valueChangeEvent(int value) {
+void Int32SliderPanel::updateCurrValue(int value) {
   curr_slider_value_ = value;
 }
 
-void Int32SliderPanel::tick() {
-  curr_slider_value_label_->setText(QString("curr: ") +
-                                    QString::number(curr_slider_value_));
-
+void Int32SliderPanel::updateRange() {
   int min_value = min_edit_->text().toInt();
   int max_value = max_edit_->text().toInt();
   if (min_value <= max_value) {
@@ -81,7 +80,12 @@ void Int32SliderPanel::tick() {
     min_edit_->setStyleSheet("QLineEdit {background-color: red;}");
     max_edit_->setStyleSheet("QLineEdit {background-color: red;}");
   }
+}
 
+void Int32SliderPanel::tick() {
+  curr_slider_value_label_->setText(QString("curr: ") +
+                                    QString::number(curr_slider_value_));
+  updateRange();
   if (enable_check_->isChecked()) {
     topic_edit_->setEnabled(false);
     min_edit_->setEnabled(false);

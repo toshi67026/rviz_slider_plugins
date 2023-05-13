@@ -21,7 +21,7 @@ public:
   virtual void save(rviz_common::Config config) const;
 
 public Q_SLOTS:
-  void valueChangeEvent(int value);
+  void updateCurrValue(int value);
   void tick();
 
 protected:
@@ -36,7 +36,8 @@ protected:
   QSlider *slider_;
 
 private:
-  int curr_slider_value_ = 0; // default value
+  int curr_slider_value_ = 0;
+  void updateRange();
 };
 
 } // namespace rviz_slider_plugins

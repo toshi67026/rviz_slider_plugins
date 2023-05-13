@@ -16,7 +16,7 @@ Float32SliderPanel::Float32SliderPanel(QWidget *parent)
 
   slider_ = new FloatSlider(Qt::Horizontal, this);
   connect(slider_, SIGNAL(floatValueChanged(float)), this,
-          SLOT(valueChangeEvent(float)));
+          SLOT(updateCurrValue(float)));
 
   QTimer *output_timer = new QTimer(this);
   connect(output_timer, SIGNAL(timeout()), this, SLOT(tick()));
@@ -49,6 +49,9 @@ Float32SliderPanel::Float32SliderPanel(QWidget *parent)
   layout->addLayout(hlayout2);
   layout->addLayout(hlayout3);
   setLayout(layout);
+
+  updateRange();                // before set default value
+  slider_->setFloatValue(-0.2); // default value
 }
 
 void Float32SliderPanel::onInitialize() {
@@ -60,16 +63,13 @@ void Float32SliderPanel::save(rviz_common::Config config) const {
   rviz_common::Panel::save(config);
 }
 
-void Float32SliderPanel::valueChangeEvent(float value) {
+void Float32SliderPanel::updateCurrValue(float value) {
   curr_slider_value_ = value;
 }
 
-void Float32SliderPanel::tick() {
-  curr_slider_value_label_->setText(
-      QString("curr: ") + QString::number(curr_slider_value_, 'f', 1));
-
-  int min_value = min_edit_->text().toFloat() * 10.0;
-  int max_value = max_edit_->text().toFloat() * 10.0;
+void Float32SliderPanel::updateRange() {
+  int min_value = static_cast<int>(min_edit_->text().toFloat() * 10.0);
+  int max_value = static_cast<int>(max_edit_->text().toFloat() * 10.0);
   if (min_value <= max_value) {
     enable_check_->setEnabled(true);
     slider_->setRange(min_value, max_value);
@@ -80,7 +80,12 @@ void Float32SliderPanel::tick() {
     min_edit_->setStyleSheet("QLineEdit {background-color: red;}");
     max_edit_->setStyleSheet("QLineEdit {background-color: red;}");
   }
+}
 
+void Float32SliderPanel::tick() {
+  curr_slider_value_label_->setText(
+      QString("curr: ") + QString::number(curr_slider_value_, 'f', 1));
+  updateRange();
   if (enable_check_->isChecked()) {
     topic_edit_->setEnabled(false);
     min_edit_->setEnabled(false);
